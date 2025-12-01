@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html lang='en' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta charset='UTF-8'/>
+  <meta content='width=device-width, initial-scale=1.0' name='viewport'/>
+  <title>Shop Into</title>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css' rel='stylesheet'/>
+  <style>
+    :root {
+      --primary: #e67e22;
+      --dark: #2c3e50;
+      --light: #f9f9f9;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: &#39;Segoe UI&#39;, sans-serif; }
+    body { background: white; color: var(--dark); }
+
+    .announcement {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #eee;
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .social-icons a {
+      width: 35px;
+      height: 35px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .search-bar {
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    .search-bar input {
+      width: 90%;
+      max-width: 400px;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 16px;
+    }
+
+    .main, #productDetail {
+      padding: 30px 20px;
+    }
+
+    .products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+    .product-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+
+    .product-card:hover { transform: scale(1.02); }
+
+   .product-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+}
+
+ 
+    .product-info {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .price { color: var(--primary); font-weight: bold; }
+    .original-price {
+      text-decoration: line-through;
+      color: #888;
+      margin-left: 6px;
+      font-size: 13px;
+    }
+
+    .rating-sold {
+      font-size: 13px;
+      margin-top: 4px;
+      color: #777;
+    }
+
+    #productDetail { display: none; }
+
+    .order-button {
+      background: var(--primary);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    form input, form select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    form button {
+      margin-top: 15px;
+      background: green;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    @media only screen and (max-width: 600px) {
+  .products {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+    .offer-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #2ecc71; /* green color */
+  color: white;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+.product-card {
+  position: relative; /* very important for badge to be positioned inside */
+}
+    
+ .review-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  font-family: sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  max-width: 700px;
+  margin: auto;
+}
+
+.average-rating {
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+}
+
+.average-rating .stars {
+  font-size: 24px;
+  color: #f5a623;
+  letter-spacing: 3px;
+}
+
+.average-rating .score {
+  font-size: 20px;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.average-rating .total-reviews {
+  font-size: 14px;
+  color: gray;
+}
+
+.rating-breakdown {
+  flex: 1;
+  min-width: 300px;
+}
+
+.rating-breakdown h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.bar {
+  flex: 1;
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar .fill {
+  height: 100%;
+  background: #000;
+}
+   
+      @keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+ 
+    
+    
+/* Footer Styling */
+.footer {
+  background: linear-gradient(135deg, #111, #222);
+  color: #fff;
+  padding: 50px 20px 20px;
+  font-family: Arial, sans-serif;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-section h3,
+.footer-section h2 {
+  margin-bottom: 15px;
+  color: #ff6600;
+}
+
+.footer-logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ff3b3b;
+}
+
+.footer-section p,
+.footer-section a {
+  font-size: 14px;
+  color: #bbb;
+  transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+  color: #ff3b3b;
+}
+
+.social-links a {
+  margin-right: 20px;
+  font-size: 22px;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #444;
+  padding-top: 15px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+    
+    
+    /* Footer Background Animation */
+footer {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(270deg, #ff4d4d, #1e1e1e, #4d79ff);
+  background-size: 600% 600%;
+  animation: footerGradient 15s ease infinite;
+  color: white;
+}
+
+@keyframes footerGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Back to Top Button Style */
+#backToTopBtn {
+  display: none; /* Default hidden */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99;
+  font-size: 20px;
+  border: none;
+  outline: none;
+  background: ##ff6600;
+  color: orange;
+  cursor: pointer;
+  padding: 12px 15px;
+  border-radius: 50%;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+#backToTopBtn:hover {
+  background: #ff6600;
+  transform: scale(1.1);
+}
+    
+    
+    
+    
+    
+    
+
+    <b:skin><![CDATA[
+/* Blogger requires one skin block */
+body {
+  background: #ffffff;
+}
+]]></b:skin>
+
+
+  </style>
+</head>
+<body>
+
+<!-- Announcement -->
+<div class='announcement'>Send 200 PKR and Confirm Order</div>
+
+<!-- Header -->
+<header>
+  <div class='logo'>
+    <img alt='Shop Into' src='https://i.postimg.cc/KcR9TYRW/Screenshot-2025-07-14-164625.png'/>
+  </div>
+  <div class='social-icons'>
+    <a href='https://www.facebook.com/share/16iTi2CQXe/?mibextid=wwXIfr'><i class='fab fa-facebook-f'/></a>
+    <a href='https://www.instagram.com/shopinto.pkk?igsh=MXV4eTl2NGFkMGl2Nw=='><i class='fab fa-instagram'/></a>
+    <a href='https://www.tiktok.com/@shop.into?_t=ZS-8yNN7fKeHJK&amp;_r=1'><i class='fab fa-tiktok'/></a>
+    <a href='https://wa.me/message/ETZQF64CBU7CH1'><i class='fab fa-whatsapp'/></a>
+  </div>
+</header>
+
+<!-- Search Bar -->
+<div class='search-bar'>
+  <input id='searchInput' oninput='filterProducts()' placeholder='Search products...' type='text'/>
+</div>
+
+<!-- Home Page -->
+<div class='main' id='homePage'>
+  <h2>🛍&#65039; Trending Products</h2>
+  <div class='products' id='productList'>
+
+  <!-- Product 1: Wireless Earbuds -->
+  <div class='product-card' data-customer-reviews-html='&lt;div style=&apos;margin-top:40px;&apos;&gt;   &lt;h2 style=&apos;font-size:22px; margin-bottom:20px;&apos;&gt;🧑‍💼 Customer Reviews&lt;/h2&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;  &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;R&lt;/div&gt;     &lt;div style=&apos;flex:1;     &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;H&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Hashim&lt;/strong&gt;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;1 days ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt;  Main 2-3 ghante lagata hoon aur kaan mein discomfort feel nahi hota. Fit bhi achi hai, girte nahi easily &lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt; &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;M&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Muneeb m&lt;/strong&gt;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;2 days ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt; I recive my parcel on time its really gud material product I m satisfied with these airpods Me inshaAllah shop again Highly recommended to all &lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt; &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;F&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Faida K&lt;/strong&gt;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;3 days ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt; I ordered wireless earbuds from Daraz The delivery was fast and the packing was good. The product looks nice and works well The sound is clear and the battery is also okay Overall, I’m happy with the product highly recommend.&lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt; &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;Z&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Zeeshan&lt;/strong&gt;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;3 days ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt; received  parcel  umeed sy bhar kar axhi. qulity  k air buds received  howy I really like it  &lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt; &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;A&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Aisha&lt;/strong&gt;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;4 days ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt;thank you so much I receive my parcel it is good product much satisfied..... thank you &lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt; &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;R&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Rehan&lt;/strong&gt;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;4 days ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt;received parcel bht achy quality  k air buds Han.. I really like it ..&lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt; &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;H&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Hayat&lt;/strong&gt;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;5 days ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt;quality of product 10/10...packaging Excellent .Recommended to all &lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt;  &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;A&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Anas&lt;/strong&gt;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;5 days ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt;AirPods are good overall good product in this price range ❤️&lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt; &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;A&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Ali32&lt;/strong&gt;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;5 days ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos; &gt;sound quality is good with no noise the best part is it good for call the other person sitting next can’t hear anything .&lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt;' data-description='Here are some Salient Features:  Air Buds Pro 2 have been redesigned for even richer audio experiences. Improved Active Noise Cancellation (With ANC Variant)  Transparency Mode (With ANC Variant) Spatial Audio takes immersion to a remarkably personal level. Touch control now lets you adjust volume with a swipe. A leap in power delivers upto 5 hours of battery life from a single full charge. Latest Bluetooth wireless technology Vent system for pressure equalization Adaptive EQ Sweat and water-resistant Air Buds/ Ear Buds Air Buds/ Ear Buds having Easy setup for all your iOS/ Android devices Quick charging in the case for Air Buds/ Ear Buds Air Buds/ Ear Buds are Compatible with iOS/ Android Operating Systems' data-images='[&quot;https://i.postimg.cc/kG1d0C5Y/20250727-125107.jpg&quot;, &quot;https://i.postimg.cc/X7Ghjd1Y/20250727-125012.jpg.jpg&quot;, &quot;https://i.postimg.cc/6Qw1fSW8/20250727-125046.jpg.png&quot;, &quot;https://img.drz.lazcdn.com/static/pk/p/fe3be93bc137b0377b1a1552c797fa80.png_720x720q80.png_.webp.png&quot;]' data-name='Apple Airbuds Pro 2 Gen' data-original='5000' data-price='1899' data-reviews-html='&lt;div class=&apos;review-summary&apos;&gt;   &lt;div class=&apos;average-rating&apos;&gt;     &lt;div class=&apos;stars&apos;&gt;       ★★★★★     &lt;/div&gt;     &lt;div class=&apos;score&apos;&gt;4.74 out of 5&lt;/div&gt;     &lt;div class=&apos;total-reviews&apos;&gt;Based on 9 reviews ✔️&lt;/div&gt;   &lt;/div&gt;   &lt;div class=&apos;rating-breakdown&apos;&gt;     &lt;h3&gt;Customer Reviews&lt;/h3&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★★★★★&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:90%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;7&lt;/span&gt;&lt;/div&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★★★★☆&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:60%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;2&lt;/span&gt;&lt;/div&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★★★☆☆&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:0%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;0&lt;/span&gt;&lt;/div&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★★☆☆☆&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:0%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;0&lt;/span&gt;&lt;/div&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★☆☆☆☆&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:0%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;0&lt;/span&gt;&lt;/div&gt;   &lt;/div&gt; &lt;/div&gt;' onclick='showDetail(this)'>
+
+  <img alt='Air Earbuds' src='https://static-01.daraz.pk/p/ef1758e80bfee94e658c18e313938e78.png'/>
+  <div class='product-info'>
+    <h4>Apple Airbud Pro 2 Gen</h4>
+    <div>
+      <div class='offer-badge'>Azade Big Sale</div>
+      <span class='price'>Rs. 1,700</span>
+      <span class='original-price'>Rs. 5,000</span>
+    </div>
+    <div class='rating-sold'>&#11088; 4.7 | Sold: 100+</div>
+  </div>
+</div>
+    
+    
+ <div class='product-card' data-customer-reviews-html='&lt;div style=&apos;margin-top:40px;&apos;&gt;   &lt;h2 style=&apos;font-size:22px; margin-bottom:20px;&apos;&gt;🧑‍💼 Customer Reviews&lt;/h2&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt;     &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;S&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;sameerali3918;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;1 day ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt;bhoout achi Hai itni sasti mili hai&lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt; &lt;/div&gt;   &lt;div style=&apos;display:flex;gap:15px;margin-bottom:25px;&apos;&gt;     &lt;div style=&apos;width:45px;height:45px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:#444;&apos;&gt;J&lt;/div&gt;     &lt;div style=&apos;flex:1;&apos;&gt;       &lt;strong style=&apos;font-size:16px;color:#333;&apos;&gt;Junaid Khan ;       &lt;div style=&apos;font-size:13px;color:#999;&apos;&gt;2 day ago&lt;/div&gt;       &lt;div style=&apos;color:#f1c40f;font-size:16px;margin:4px 0;&apos;&gt;★★★★★&lt;/div&gt;       &lt;p style=&apos;color:#444;margin:0;&apos;&gt;Assalam Walikum yar ma bilkul Honest Review Donga Ke Mane Khud In se Order keye Ha Price Bhe Bhot he zayda Cheap ha Or Packing bhe fully zabardast thee or ha earbuds ke quality bari zabardast thee or saat battery timing bhe bohot ache te or ha Special Thanks Shop Into ❤️ Very Recommended&lt;/p&gt;     &lt;/div&gt;   &lt;/div&gt; &lt;/div&gt;' data-description='.Feature: Original transparent design Style: Touch Design Fit for Bluetooth-compatible Version: BT V5.3 Operate Range: 10m(No obstruction) headset Battery Capacity: 30mAh Charger case battery capacity: 200mah Charge Time: about 2 hours Music Time: about 5 hours Applicable products: Iphone,Mobile Phones, Pads and PC Channel: Stereo (provides audio to both ears). Material: Plastic Origin: Mainland China' data-images='[&quot;https://pakistanstore.pk/wp-content/uploads/2023/10/Air-31-Earbud.jpg&quot;, &quot;https://pakistanstore.pk/wp-content/uploads/2023/10/Air-31-Bluetooth-Earbuds-Black-scaled.jpg&quot;, &quot;https://www.yowd.io/cdn/shop/files/Air31WirelessEarbudsBluetooth5.3ENCTWS6.jpg?v=1699361216.webp.png&quot;]' data-name='Air 31 Black High Quality' data-original='3000' data-price='1200' data-reviews-html='&lt;div class=&apos;review-summary&apos;&gt;   &lt;div class=&apos;average-rating&apos;&gt;     &lt;div class=&apos;stars&apos;&gt;       ★★★★★     &lt;/div&gt;     &lt;div class=&apos;score&apos;&gt;4.74 out of 5&lt;/div&gt;     &lt;div class=&apos;total-reviews&apos;&gt;Based on 2 reviews ✔️&lt;/div&gt;   &lt;/div&gt;   &lt;div class=&apos;rating-breakdown&apos;&gt;     &lt;h3&gt;Customer Reviews&lt;/h3&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★★★★★&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:90%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;2&lt;/span&gt;&lt;/div&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★★★★☆&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:0%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;0&lt;/span&gt;&lt;/div&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★★★☆☆&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:0%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;0&lt;/span&gt;&lt;/div&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★★☆☆☆&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:0%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;0&lt;/span&gt;&lt;/div&gt;     &lt;div class=&apos;bar-row&apos;&gt;&lt;span&gt;★☆☆☆☆&lt;/span&gt;&lt;div class=&apos;bar&apos;&gt;&lt;div class=&apos;fill&apos; style=&apos;width:0%&apos;&gt;&lt;/div&gt;&lt;/div&gt;&lt;span&gt;0&lt;/span&gt;&lt;/div&gt;   &lt;/div&gt; &lt;/div&gt;' onclick='showDetail(this)'>
+
+  <img alt='Air Earbuds' src='https://pakistanstore.pk/wp-content/uploads/2023/10/Air-31-TWS-Earbuds-1.jpg'/>
+  <div class='product-info'>
+    <h4>Air 31 Earbud</h4>
+    <div>
+      <div class='offer-badge'>New</div>
+      <span class='price'>Rs. 1,200</span>
+      <span class='original-price'>Rs. 3,000</span>
+    </div>
+    <div class='rating-sold'>&#11088; 4.9 |Sold: 50+</div>
+  </div>
+</div>
+    
+    
+
+  <!-- Product 2: Smart Watch -->
+
+
+</div>
+
+  </div>
+
+
+
+<!-- Product Detail Page -->
+<div class='main' id='productDetail'>
+ <h2 id='productTitle'/>
+
+<!-- Back Button -->
+<button onclick='backToHome()' onmouseout='this.style.background=&apos;#000&apos;' onmouseover='this.style.background=&apos;#222&apos;' style='   background: #000;   color: #fff;   padding: 10px 20px;   border: none;   border-radius: 8px;   font-size: 16px;   font-weight: bold;   box-shadow: 0 4px 8px rgba(0,0,0,0.2);   transition: all 0.3s ease;   margin: 20px 0;   cursor: pointer; '>
+  &#65039; Back to Home
+</button>
+
+
+<!-- Main Image -->
+<img alt='Product' id='productImg' src='' style='width:100%;max-width:400px;margin:20px 0;border-radius:6px;'/>
+
+<!-- Description from JS -->
+<p><strong>Product Details:</strong> <span id='productDesc'/></p>
+  
+  <!-- Quantity + Price Section -->
+<div style='margin-top:20px;'>
+  <label for='quantity'><strong>Quantity:</strong></label>
+  <input id='productQty' min='1' style='width:80px;padding:5px;margin-left:10px;border:1px solid #ccc;border-radius:4px;' type='number' value='1'/>
+
+  <div style='margin-top:10px;'>
+    <strong>Price:</strong>
+    <span id='productPrice' style='color:var(--primary);font-weight:bold;'>Rs. 0</span>
+    <span id='productOriginalPrice' style='text-decoration:line-through;margin-left:8px;color:#888;'>Rs. 0</span>
+  </div>
+</div>
+
+
+
+<!-- Image Gallery -->
+<div id='imageGallery' style='display:flex;flex-wrap:wrap;margin-top:10px;'/>
+
+<!-- Guarantees -->
+<!-- Guarantee Section (Product Detail Page) -->
+<div style='margin: 25px 0;'>
+  <div style='display: flex; align-items: center; margin-bottom: 15px;'>
+    <img alt='Warranty' src='https://cdn-icons-png.flaticon.com/128/10806/10806533.png' style='width:30px;height:35px;object-fit:cover;border-radius:7px;border:1px solid #ccc;'/>
+    <strong> 7 Days Check warranty</strong>
+  </div>
+  <div style='display: flex; align-items: center; margin-bottom: 15px;'>
+    <img alt='Best Price' src='https://img.icons8.com/ios-filled/40/000000/prize.png' style='margin-right:10px;'/>
+    <strong>Best Price Guarantee</strong>
+  </div>
+  <div style='display: flex; align-items: center;'>
+    <img alt='Free COD' src='https://img.icons8.com/ios-filled/40/000000/delivery.png' style='margin-right:10px;'/>
+    <strong>Fast Delivery</strong>
+  </div>
+</div>
+
+
+
+<button onclick='document.getElementById(&apos;orderSection&apos;).style.display=&apos;block&apos;' onmouseout='this.style.background=&apos;#000&apos;' onmouseover='this.style.background=&apos;#222&apos;' style='   background: #000;   color: #fff;   padding: 10px 20px;   border: none;   border-radius: 8px;   font-size: 16px;   font-weight: bold;   box-shadow: 0 4px 8px rgba(0,0,0,0.2);   transition: all 0.3s ease;   margin: 20px 0;   cursor: pointer;'>
+  Order Now
+</button>
+
+
+<!-- Order Form -->
+<div id='orderSection' style='display:none;margin-top:20px;'>
+  <form onsubmit='submitOrder(); return false;'>
+    <input id='firstName' placeholder='First Name' required='required' type='text'/>
+    <input id='lastName' placeholder='Last Name' required='required' type='text'/>
+    <input id='address' placeholder='Address' required='required' type='text'/>
+    <input id='city' placeholder='City' required='required' type='text'/>
+    <input id='postal' placeholder='Postal Code' required='required' type='text'/>
+    <input id='phone' placeholder='Phone' required='required' type='tel'/>
+    
+    <select id='shipping' required='required'>
+      <option disabled='disabled' selected='selected' value=''>Select Shipping Method</option>
+      <option value='COD'>Cash on Delivery (COD)</option>
+      <option value='EasyPaisa'>EasyPaisa</option>
+      <option value='NayaPay'>NayaPay</option>
+    </select>
+    
+    <button onclick='orderconfirm()' onmouseout='this.style.background=&apos;#000&apos;' onmouseover='this.style.background=&apos;#222&apos;' style='   background: #000;   color: #fff;   padding: 10px 20px;   border: none;   border-radius: 8px;   font-size: 16px;   font-weight: bold;   box-shadow: 0 4px 8px rgba(0,0,0,0.2);   transition: all 0.3s ease;   margin: 20px 0;   cursor: pointer; '>
+  &#65039; Order Confirm
+      </button>
+  </form>
+</div>
+
+ 
+  <!-- 🌟 Discount Code Section -->
+<div id='discountArea' style='margin-top: 30px; padding: 20px; border: 1px solid #eee; border-radius: 12px; background: linear-gradient(135deg, #fffaf0, #fff); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); animation: fadeInUp 0.6s ease;'>
+  <h3 style='color: #e67e22; margin-bottom: 10px;'>🎁 Got a Discount Code?</h3>
+  <p style='font-size: 14px; color: #555; margin-bottom: 12px;'>Enter your code below and unlock exclusive savings on this product.</p>
+
+  <div style='display: flex; flex-wrap: wrap; align-items: center; gap: 10px;'>
+    <input id='discountCode' onblur='this.style.borderColor=&apos;#ddd&apos;' onfocus='this.style.borderColor=&apos;#e67e22&apos;' placeholder='Enter code here...' style='flex: 1; min-width: 200px; padding: 12px 14px; font-size: 15px; border: 1px solid #ddd; border-radius: 8px; outline: none; transition: 0.3s ease;'/>
+    
+    <button onclick='applyDiscount()' style='background: #e67e22; color: white; padding: 12px 18px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s ease;'>Apply</button>
+  </div>
+
+  <div id='discountMessage' style='margin-top: 15px; font-size: 14px; font-weight: bold; min-height: 20px; transition: all 0.4s ease;'/>
+</div>
+  
+  
+  
+ <div id='reviewSummary' style='margin-top: 30px;'/>  
+ <div id='customerReviews' style='margin-top: 40px;'/> 
+  
+  
+  
+  
+  
+
+
+  </div>
+ 
+
+  
+  <!-- Add more reviews... -->
+<!-- Back to Top Button -->
+<button id='backToTopBtn' title='Go to top'>
+  &#8593;
+</button>
+
+
+<!-- ================= New Professional Footer Start ================= -->
+<footer class='footer'>
+  <div class='footer-container'>
+
+    <!-- About / Brand -->
+    <div class='footer-section about'>
+      <h2 class='footer-logo'>SHOPINTO</h2>
+      <p>Trusted Online Shopping in Pakistan.  
+      We provide best quality products with fast delivery and 24/7 customer support.</p>
+    </div>
+
+    <!-- Customer Services -->
+    <div class='footer-section services'>
+        <h3>Customer Service</h3>
+      <ul style='list-style:none;padding:0;'/>
+    <li>
+  <a href='javascript:void(0);' onclick='toggleSection(&quot;shippingPolicy&quot;)' style='color: white;'>Shipping Policy</a>
+</li>
+ <li>
+  <a href='javascript:void(0);' onclick='toggleSection(&apos;returnPolicy&apos;)' style='color: white;'>Return Policy</a>
+</li>
+        </div>  
+    <!-- Contact Us -->
+    <div class='footer-section contact'>
+      <h3>Contact Us</h3>
+      <p>Email: shopinto.pkk@gmail.com</p>
+      <p>Phone: +92 333 9989023</p>
+      <p>Address: Kpk, Pakistan</p>
+    </div>
+
+    <!-- Social Media -->
+    <div class='footer-section social'>
+      <h3>Follow Us</h3>
+      <div class='social-links'>
+        <a href='https://www.facebook.com/share/16iTi2CQXe/?mibextid=wwXIfr'><i class='fab fa-facebook-f'/></a>
+    <a href='https://www.instagram.com/shopinto.pkk?igsh=MXV4eTl2NGFkMGl2Nw=='><i class='fab fa-instagram'/></a>
+    <a href='https://www.tiktok.com/@shop.into?_t=ZS-8yNN7fKeHJK&amp;_r=1'><i class='fab fa-tiktok'/></a>
+    <a href='https://wa.me/message/ETZQF64CBU7CH1'><i class='fab fa-whatsapp'/></a>
+      </div>
+    </div>
+
+  <!-- Footer Bottom -->
+
+  <div class='footer-bottom'/>
+    <p>&#169; 2025 Shopinto - All Rights Reserved</p>
+  </div>
+</footer>
+
+<!-- ================= New Professional Footer End ================= -->
+
+
+<!-- Back to Top -->
+ 
+
+  
+  
+  
+  
+<!-- Scripts -->
+<script>
+  
+  
+  
+   // 🎯 Product-specific codes and discount values
+const discountCodes = {
+  &quot;Apple Airbuds Pro 2 Gen&quot;: &quot;ShopInto12&quot;,
+  &quot;Air 31 Black High Quality&quot;: &quot;AIR50&quot;
+};
+
+const discountAmounts = {
+  &quot;Apple Airbuds Pro 2 Gen&quot;: 100,
+  &quot;Air 31 Black High Quality&quot;: 50
+};
+
+let codeAlreadyUsed = false;
+
+function applyDiscount() {
+  const title = document.getElementById(&quot;productTitle&quot;).innerText;
+  const enteredCode = document.getElementById(&quot;discountCode&quot;).value.trim();
+  const msgBox = document.getElementById(&quot;discountMessage&quot;);
+  const validCode = discountCodes[title];
+  const discountAmount = discountAmounts[title];
+  const priceEl = document.getElementById(&quot;productPrice&quot;);
+
+  msgBox.style.opacity = 1;
+  msgBox.style.transition = &quot;all 0.4s ease&quot;;
+
+  if (codeAlreadyUsed) {
+    msgBox.innerHTML = &quot;&#9888;&#65039; Code already used! Contact Shop Into for a new code.&quot;;
+    msgBox.style.color = &quot;orange&quot;;
+    animateMessage(msgBox);
+    return;
+  }
+
+  if (enteredCode === validCode) {
+    let currentPrice = parseInt(priceEl.innerText.replace(&quot;Rs. &quot;, &quot;&quot;));
+    let newPrice = currentPrice - discountAmount;
+    priceEl.innerText = &quot;Rs. &quot; + newPrice;
+    msgBox.innerHTML = &quot;&#9989; Rs. &quot; + discountAmount + &quot; discount applied!&quot;;
+    msgBox.style.color = &quot;green&quot;;
+    animateMessage(msgBox);
+    codeAlreadyUsed = true;
+  } else {
+    msgBox.innerHTML = &quot;&#10060; Invalid code. Please try again or contact Shop Into.&quot;;
+    msgBox.style.color = &quot;red&quot;;
+    animateMessage(msgBox);
+  }
+}
+
+function animateMessage(element) {
+  element.style.opacity = 0;
+  setTimeout(() =&gt; {
+    element.style.opacity = 1;
+  }, 200);
+}
+  
+  
+  
+
+ function showDetail(card) {
+    const title = card.getAttribute(&quot;data-name&quot;);
+    const desc = card.getAttribute(&quot;data-description&quot;);
+    const images = JSON.parse(card.getAttribute(&quot;data-images&quot;));
+    const price = card.getAttribute(&quot;data-price&quot;);
+    const original = card.getAttribute(&quot;data-original&quot;);
+    const encodedReviewHtml = card.getAttribute(&quot;data-reviews-html&quot;);
+    const encodedCustomerReviews = card.getAttribute(&quot;data-customer-reviews-html&quot;);
+  
+    // Switch pages
+    document.getElementById(&quot;homePage&quot;).style.display = &quot;none&quot;;
+    document.getElementById(&quot;productDetail&quot;).style.display = &quot;block&quot;;
+    document.getElementById(&quot;reviewSummary&quot;).innerHTML = decodeHtmlEntities(encodedReviewHtml || &quot;&quot;);
+    document.getElementById(&quot;customerReviews&quot;).innerHTML = decodeHtmlEntities(encodedCustomerReviews || &quot;&quot;);
+
+    // Update content
+    document.getElementById(&quot;productTitle&quot;).innerText = title;
+    document.getElementById(&quot;productDesc&quot;).innerText = desc;
+    document.getElementById(&quot;productImg&quot;).src = images[0];
+    document.getElementById(&quot;productPrice&quot;).innerText = &quot;Rs. &quot; + price;
+    document.getElementById(&quot;productOriginalPrice&quot;).innerText = &quot;Rs. &quot; + original;
+
+    // Gallery images
+    const gallery = document.getElementById(&quot;imageGallery&quot;);
+    gallery.innerHTML = &quot;&quot;;
+    images.forEach((img) =&gt; {
+      const thumb = document.createElement(&quot;img&quot;);
+      thumb.src = img;
+      thumb.style.width = &quot;80px&quot;;
+      thumb.style.height = &quot;80px&quot;;
+      thumb.style.margin = &quot;5px&quot;;
+      thumb.style.objectFit = &quot;cover&quot;;
+      thumb.style.borderRadius = &quot;5px&quot;;
+      thumb.style.cursor = &quot;pointer&quot;;
+      thumb.onclick = () =&gt; {
+        document.getElementById(&quot;productImg&quot;).src = img;
+      };
+      gallery.appendChild(thumb);
+    });
+
+    loadComment();
+  }
+
+
+  function backToHome() {
+    document.getElementById(&quot;productDetail&quot;).style.display = &quot;none&quot;;
+    document.getElementById(&quot;homePage&quot;).style.display = &quot;block&quot;;
+  }
+
+  function submitOrder() {
+    const name = document.getElementById(&quot;firstName&quot;).value + &#39; &#39; + document.getElementById(&quot;lastName&quot;).value;
+    const address = document.getElementById(&quot;address&quot;).value;
+    const city = document.getElementById(&quot;city&quot;).value;
+    const postal = document.getElementById(&quot;postal&quot;).value;
+    const phone = document.getElementById(&quot;phone&quot;).value;
+    const shipping = document.getElementById(&quot;shipping&quot;).value;
+
+    const msg = `*Shop Into Order*%0AName: ${name}%0AAddress: ${address}, ${city}, ${postal}%0APhone: ${phone}%0AShipping: ${shipping}%0A&#9888;&#65039; Delivery charges must be paid first.`;
+
+    window.open(&quot;https://wa.me/923375565829?text=&quot; + msg, &quot;_blank&quot;);
+  }
+
+  
+  
+  
+  
+
+  function filterProducts() {
+    let input = document.getElementById(&quot;searchInput&quot;).value.toLowerCase();
+    let products = document.querySelectorAll(&quot;.product-card&quot;);
+    products.forEach((card) =&gt; {
+      let name = card.getAttribute(&quot;data-name&quot;).toLowerCase();
+      card.style.display = name.includes(input) ? &quot;block&quot; : &quot;none&quot;;
+    });
+  }
+ 
+  function openShippingPolicy() {
+    // Hide all main sections
+    document.getElementById(&quot;homePage&quot;).style.display = &quot;none&quot;;
+    document.getElementById(&quot;productDetail&quot;).style.display = &quot;none&quot;;
+    
+    // Show Shipping Policy
+    document.getElementById(&quot;shippingPolicy&quot;).style.display = &quot;block&quot;;
+  }
+  
+  function toggleSection(sectionId) {
+    var el = document.getElementById(sectionId);
+    if (el.style.display === &quot;none&quot; || el.style.display === &quot;&quot;) {
+      el.style.display = &quot;block&quot;;
+    } else {
+      el.style.display = &quot;none&quot;;
+    }
+
+    // Optionally hide other sections if needed
+    // document.getElementById(&quot;otherSection&quot;).style.display = &quot;none&quot;;
+  }
+
+  function decodeHtmlEntities(encodedStr) {
+  const txt = document.createElement(&#39;textarea&#39;);
+  txt.innerHTML = encodedStr;
+  return txt.value;
+}
+  
+  
+  
+  // Get the button
+let mybutton = document.getElementById(&quot;backToTopBtn&quot;);
+
+// Show button after scrolling down 200px
+window.onscroll = function() {
+  if (document.body.scrollTop &gt; 200 || document.documentElement.scrollTop &gt; 200) {
+    mybutton.style.display = &quot;block&quot;;
+  } else {
+    mybutton.style.display = &quot;none&quot;;
+  }
+};
+
+// When user clicks the button, scroll to top smoothly
+mybutton.onclick = function() {
+  window.scrollTo({ top: 0, behavior: &#39;smooth&#39; });
+};
+
+  
+  
+  
+  
+  
+
+</script>
+<b:section class='dummy' id='dummySection' showaddelement='no'/>
+<!-- Shipping Policy Section -->
+<div class='main' id='shippingPolicy' style='display: none; padding: 30px 20px;'>
+  <h2 style='color: var(--primary); margin-bottom: 15px;'>📦 Shipping Policy</h2>
+  <p style='line-height: 1.7; color: #333;'>
+    Thank you for shopping at <strong>Shop Into</strong>. We aim to deliver your products quickly, safely, and at affordable rates throughout Pakistan.
+  </p>
+  <ul style='margin-top: 10px; line-height: 1.6; padding-left: 18px;'>
+    <li><strong>Processing Time:</strong> Orders are processed within 1-2 working days.</li>
+    <li><strong>Delivery Time:</strong> 2-5 working days (varies by city/region).</li>
+    <li><strong>Shipping Charges:</strong> Free for orders over PKR 5000; otherwise, standard charges apply.</li>
+    <li><strong>Shipping Partners:</strong> We partner with trusted courier services across Pakistan.</li>
+  </ul>
+  <p style='margin-top: 10px; color: #888;'>&#9888;&#65039; Delivery charges are to be paid upfront at the time of delivery.</p>
+
+  <!-- Back button -->
+ 
+</div>
+  <!-- Return Policy Section -->
+<div id='returnPolicy' style='display:none; padding: 30px; background: #f8f8f8;'>
+  <h2>🔁 Return Policy</h2>
+  <p>
+    We want you to be fully satisfied with every item you purchase from Shop Into. If for any reason you are not satisfied, we will gladly accept returns within 7 days of delivery under the following conditions:
+  </p>
+  <ul style='margin-top:15px;'>
+    <li>Item must be unused and in the same condition that you received it.</li>
+    <li>It must also be in the original packaging.</li>
+    <li>Only defective or wrong products can be exchanged or refunded.</li>
+    <li>Shipping charges are non-refundable.</li>
+    <li>To complete your return, we require a receipt or proof of purchase.</li>
+  </ul>
+  <p style='margin-top:15px;'>
+    For return instructions, contact us via WhatsApp or email. We strive to resolve issues as quickly as possible.
+  </p>
+</div>
+
+  
+
+</body>
+</html>
